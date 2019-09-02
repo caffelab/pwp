@@ -1,4 +1,7 @@
 {
+    "name": "caffelab/pwp",
+    "license": "MIT",
+    "version": "v0.1",
     "authors": [{
         "name": "ZCX",
         "email": "695417298@qq.com"
