@@ -1,5 +1,8 @@
 {
     "name": "caffelab/pwp",
+    "type": "framework",
+    "keywords": ["pwp", "php framework"],
+    "homepage": "https://github.com/caffelab/pwp",
     "license": "MIT",
     "version": "v0.1",
     "authors": [{
@@ -10,6 +13,7 @@
         "psr-4": { "pwp\\": "src/" }
     },
     "require": {
-        "catfan/medoo": "^1.7"
+        "catfan/medoo": "^1.7",
+        "php": ">7.0"
     }
 }
