@@ -8,11 +8,16 @@ namespace pwp;
 
 class Config {
 
-    protected $config;
+    protected static $config=[];
     //1.从项目根目录/config 遍历读取配置文件
-    
 
-    //2.优先级当前目录下的根目录下的
+    private function __construct(){
+        $path = ROOT_PATH.'/app/config/config.php';
+        $this->config = include($path);
+    }
 
-    //3.合并所有配置文件数组作为配置信息
+    static public function getConfig(){
+        $config  = new Config();
+        return $config::$config;
+    }
 }

@@ -21,9 +21,14 @@ class Model
     protected $id;
 
 
-    public function __construct($config)
+    public function __construct($config=[])
     {
-        $this->config = $config;
+        if(sizeof($config)==0){
+            $config=Config::getConfig();
+        }else{
+            $this->config = $config;
+        }
+        
         $this->database = new Medoo([
             'database_type'=> $config['db']['driver'],
             'database_name' => $config['db']['dbname'],
