@@ -8,7 +8,7 @@ namespace pwp;
 
 class Config {
 
-    protected static $config=[];
+    public $config=[];
     //1.从项目根目录/config 遍历读取配置文件
 
     private function __construct(){
@@ -18,6 +18,6 @@ class Config {
 
     static public function getConfig(){
         $config  = new Config();
-        return $config::$config;
+        return $config->config;
     }
 }
