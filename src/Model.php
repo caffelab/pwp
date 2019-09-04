@@ -24,7 +24,7 @@ class Model
     public function __construct($config=[])
     {
         if(sizeof($config)==0){
-            $config=Config::getConfig();
+            $this->config=Config::getConfig();
         }else{
             $this->config = $config;
         }
@@ -37,7 +37,7 @@ class Model
             'password' => $config['db']['password'],
             'charset' => $config['db']['charset'],
             'port' => $config['db']['port'],
-            //'prefix' => $config['db']['prefix']
+            'prefix' => $config['db']['prefix']
         ]);
         $this->getVersion();
     }
