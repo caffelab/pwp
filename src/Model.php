@@ -68,7 +68,7 @@ class Model
     {
         $key = '['.$operator.']'.$this->config['db']['prefix'].$table_name;
         $this->join[$key] = $data;
-        dump($this->join);
+        //dump($this->join);
         return $this;
     }
 
