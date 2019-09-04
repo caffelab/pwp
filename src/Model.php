@@ -24,11 +24,11 @@ class Model
     public function __construct($config=[])
     {
         if(sizeof($config)==0){
-            $this->config=Config::getConfig();
+            $config=Config::getConfig();
+            $this->config = $config;
         }else{
             $this->config = $config;
         }
-        $this->config = $config;
         $this->database = new Medoo([
             'database_type'=> $config['db']['driver'],
             'database_name' => $config['db']['dbname'],
