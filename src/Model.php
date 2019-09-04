@@ -28,7 +28,7 @@ class Model
         }else{
             $this->config = $config;
         }
-        
+        $this->config = $config;
         $this->database = new Medoo([
             'database_type'=> $config['db']['driver'],
             'database_name' => $config['db']['dbname'],
