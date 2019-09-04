@@ -37,7 +37,7 @@ class Model
             'password' => $config['db']['password'],
             'charset' => $config['db']['charset'],
             'port' => $config['db']['port'],
-            'prefix' => $config['db']['prefix']
+            //'prefix' => $config['db']['prefix']
         ]);
         $this->getVersion();
     }
