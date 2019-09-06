@@ -3,7 +3,7 @@
  * 验证码类
  * @author ZCX (695417298@qq.com)
  */
-namespace pwp;
+namespace pwp\lib;
 
 class Code {
     protected $number;

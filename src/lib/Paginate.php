@@ -4,8 +4,8 @@
  * @author ZCX <695417298@qq.com>
  * 2019年08月27日
  */
-namespace pwp;
+namespace pwp\lib;
 
-class Page {
+class Paginate {
     
 }
