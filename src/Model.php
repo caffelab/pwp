@@ -40,6 +40,7 @@ class Model
             //'prefix' => $config['db']['prefix']
         ]);
         $this->getVersion();
+        $this->_getTable();
     }
 
     protected function getVersion()
@@ -51,7 +52,12 @@ class Model
 
     public function select()
     {
-        $result = $this->database->select($this->table_name, $this->join, $this->field, $this->where);
+        if(count($this->join)>0){
+            $result = $this->database->select($this->table_name, $this->join, $this->field, $this->where);
+        }else{
+            $result = $this->database->select($this->table_name,$this->field,$this->where);
+        }
+        
         if (empty($result)) {
             $result = [];
         }
@@ -72,7 +78,7 @@ class Model
         return $this;
     }
 
-    public function table($table_name)
+    public function table($table_name='')
     {
         $this->table_name = $this->config['db']['prefix'].$table_name;
         return $this;
@@ -127,7 +133,11 @@ class Model
      */
     public function find()
     {
-        $column=$this->database->get($this->table_name, $this->join,$this->field, $this->where);
+        if(count($this->join)>0){
+            $column=$this->database->get($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $column = $this->database->get($this->table_name,$this->field,$this->where);
+        }
         return $column;
     }
 
@@ -135,7 +145,7 @@ class Model
     {
         $status=$this->database->insert($this->table_name, $this->data);
         if (!$status) {
-            var_dump($this->database->error());
+            dump($this->database->error());
         }
         $this->id = $this->database->id();
         return $status;
@@ -199,5 +209,13 @@ class Model
 
     public function rand(){
         return $this->database->rand($this->table_name,$this->join,$this->field,$this->where);
+    }
+
+    protected function _getTable(){
+        $class = get_called_class();
+        $arr = explode('\\',$class);
+        $table_name = strtolower(substr($arr[3],0,-5));
+        $table_name = $this->config['db']['prefix'].$table_name;
+        $this->table_name = $table_name;
     }
 }
