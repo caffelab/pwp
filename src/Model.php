@@ -188,27 +188,57 @@ class Model
     }
 
     public function count(){
-        return $this->database->count($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $count=$this->database->count($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $count = $this->database->count($this->table_name,$this->field,$this->where);
+        }
+        return $count;
     }
 
     public function sum(){
-        return $this->database->sum($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $sum=$this->database->sum($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $sum = $this->database->sum($this->table_name,$this->field,$this->where);
+        }
+        return $sum;
     }
 
     public function avg(){
-        return $this->database->avg($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $avg=$this->database->avg($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $avg = $this->database->avg($this->table_name,$this->field,$this->where);
+        }
+        return $avg;
     }
 
     public function max(){
-        return $this->database->max($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $max=$this->database->max($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $max = $this->database->max($this->table_name,$this->field,$this->where);
+        }
+        return $max;
     }
 
     public function min(){
-        return $this->database->min($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $min=$this->database->min($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $min = $this->database->min($this->table_name,$this->field,$this->where);
+        }
+        return $min;
     }
 
     public function rand(){
-        return $this->database->rand($this->table_name,$this->join,$this->field,$this->where);
+        if(count($this->join)>0){
+            $rand=$this->database->rand($this->table_name, $this->join,$this->field, $this->where);
+        }else{
+            $rand = $this->database->rand($this->table_name,$this->field,$this->where);
+        }
+        return $rand;
     }
 
     protected function _getTable(){
