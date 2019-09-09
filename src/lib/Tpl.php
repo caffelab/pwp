@@ -2,6 +2,8 @@
 
 namespace pwp\lib;
 
+use EasyWeChat\Kernel\Exceptions\Exception;
+
 class Tpl
 {
     public $viewDir;
@@ -54,33 +56,52 @@ class Tpl
         $this->var[$name] = $value;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function show($viewName,$isInclude=true,$uri=null){
+
+    }
+
     public function display($viewName,$isInclude=true,$uri=null){
         //拼接文件全路径
         $viewPath = rtrim($this->viewDir,'/').'/'.$viewName;
         //echo $viewPath;
         if(!file_exists($viewPath)){
-            die('模板文件不存在');
+            throw new Exception("{$viewPath}模板文件不存在");
         }
-        //拼接缓存文件全路径
-        $cacheName = md5($viewName.$uri).'.php';
-        $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
-        //判断缓存文件是否存在
-        if(!file_exists($cachePath)){
-            $php = $this->compile($viewPath);
-            file_put_contents($cachePath,$php);
-        }else{
-            $isTimeOut = (filectime($cachePath)+$this->lifeTime)>time()?true:false;
-            $isChange = filemtime($viewPath)>filemtime($cachePath)?true:false;
-            if($isTimeOut||$isChange){
+        //调试模式无缓存
+        if(!is_debug()){
+            //拼接缓存文件全路径
+            $cacheName = md5($viewName.$uri).'.php';
+            $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
+            //判断缓存文件是否存在
+            if(!file_exists($cachePath)){
                 $php = $this->compile($viewPath);
                 file_put_contents($cachePath,$php);
-            }
+            }else{
+                $isTimeOut = (filectime($cachePath)+$this->lifeTime)>time()?true:false;
+                $isChange = filemtime($viewPath)>filemtime($cachePath)?true:false;
+                if($isTimeOut||$isChange){
+                    $php = $this->compile($viewPath);
+                    file_put_contents($cachePath,$php);
+                }
 
+                if($isInclude){
+                    extract($this->var);
+                    include $cachePath;
+                }
+            }
+        }else{
+            $php = $this->compile($viewPath);
+            echo $php;
             if($isInclude){
                 extract($this->var);
-                include $cachePath;
             }
         }
+        
         
     }
 
@@ -99,10 +120,15 @@ class Tpl
     }
 
     protected function parseInclude($data){
-        $fileName = trim($data[1],'\'"');
-        $this->display($fileName,false);
-        $cacheName = md5($fileName).'.php';
-        $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
-        return '<?php include "'.$cachePath.'"?>';
+        if(!is_debug()){
+            $fileName = trim($data[1],'\'"');
+            $this->display($fileName,false);
+            $cacheName = md5($fileName).'.php';
+            $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
+            return '<?php include "'.$cachePath.'"?>';
+        }else{
+            $fileName = trim($data[1],"\'||\"");
+            $this->display($fileName,false);
+        }
     }
 }

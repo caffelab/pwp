@@ -21,7 +21,7 @@ class Pwp
         }
         $class = '\\app\\'.$module.'\\'.$layoutName.'\\'.$role.\ucfirst($layoutName);
         if(!class_exists($class)){
-            die("类{$class}不存在");
+            throw new Exception("类{$class}不存在");
         }
         $obj = new \ReflectionClass($class);
         $ret = $obj->newInstance();

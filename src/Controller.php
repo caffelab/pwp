@@ -2,6 +2,7 @@
 
 namespace pwp;
 use pwp\lib\Tpl;
+use EasyWeChat\Kernel\Exceptions\Exception;
 class Controller
 {
     public $assign;
@@ -18,16 +19,21 @@ class Controller
     public function display($pageName=''){
         $tmpDir = $this->getViewPath();
         $this->tpl->viewDir = $tmpDir;
+        //echo $tmpDir;
         //echo __DIR__;
-        $page_name = ACTION_NAME.'.html';
+        if(!empty($pageName)){
+            $page_name = $pageName;
+        }else{
+            $page_name = ACTION_NAME.'.html';
+        }
         $this->tpl->display($page_name);
     }
 
     //目录为：app\system\view\api\index.html
     protected function getViewPath(){
-        $tmpDir = ROOT_PATH.APP_NAME.'/'.MODULE_NAME.'/view/'.LAYOUT_NAME.'/'.ROLE_NAME;
+        $tmpDir = ROOT_PATH.APP_NAME.'/'.MODULE_NAME.'/view/'.LAYOUT_NAME;
         if(!file_exists($tmpDir)){
-            die('模板文件不存在于'.$tmpDir);
+            throw new Exception('模板文件不存在于'.$tmpDir);
         }
         return $tmpDir;
     }
