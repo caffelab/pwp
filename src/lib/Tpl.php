@@ -23,6 +23,8 @@ class Tpl
         '{else}' => '<?php else: ?>',
         '{elseif %%}' => '<?php elseif(\1): ?>'
     ];
+    public $include=[];
+    public $layout=null;
 
     public function __construct($viewDir=null,$cacheDir=null,$lifeTime=null){
         if(!empty($viewDir)){
@@ -62,7 +64,7 @@ class Tpl
      * @return void
      */
     public function show($viewName,$isInclude=true,$uri=null){
-
+        //获取
     }
 
     public function display($viewName,$isInclude=true,$uri=null){
@@ -79,13 +81,13 @@ class Tpl
             $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
             //判断缓存文件是否存在
             if(!file_exists($cachePath)){
-                $php = $this->compile($viewPath);
+                $php = $this->compile($viewPath,$viewName);
                 file_put_contents($cachePath,$php);
             }else{
                 $isTimeOut = (filectime($cachePath)+$this->lifeTime)>time()?true:false;
                 $isChange = filemtime($viewPath)>filemtime($cachePath)?true:false;
                 if($isTimeOut||$isChange){
-                    $php = $this->compile($viewPath);
+                    $php = $this->compile($viewPath,$viewName);
                     file_put_contents($cachePath,$php);
                 }
 
@@ -95,8 +97,14 @@ class Tpl
                 }
             }
         }else{
-            $php = $this->compile($viewPath);
-            echo $php;
+            $php = $this->compile($viewPath,$viewName);
+            if(!is_null($this->layout)){
+                foreach($this->include as $key=>$value){
+                    $html=preg_replace($key,$value,$this->layout);
+                    echo $html;
+                }
+            }
+            echo $html;
             if($isInclude){
                 extract($this->var);
             }
@@ -105,30 +113,36 @@ class Tpl
         
     }
 
-    protected function compile($filePath){
+    protected function compile($filePath,$viewName){
         $html = file_get_contents($filePath);
+        if($viewName=='layout.html'){
+            $this->layout = $html;
+        }
         foreach($this->tag as $key => $value){
             $pattern = '#'.str_replace('%%','(.+?)',preg_quote($key,'#')).'#';
             if(strstr($pattern,'include')){
                 $html = preg_replace_callback($pattern,[$this,'parseInclude'],$html);
             }else{
-                $html = preg_replace($pattern,$value,$html);
-
+               $html = preg_replace($pattern,$value,$html);
             }
         }
         return $html;
     }
 
     protected function parseInclude($data){
-        if(!is_debug()){
+/*         if(!is_debug()){
             $fileName = trim($data[1],'\'"');
-            $this->display($fileName,false);
-            $cacheName = md5($fileName).'.php';
-            $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
-            return '<?php include "'.$cachePath.'"?>';
-        }else{
+            $html = $this->compile($fileName,false);
+
+//             $cacheName = md5($fileName).'.php';
+//             $cachePath = rtrim($this->cacheDir,'/').'/'.$cacheName;
+           return '<?php include "'.$cachePath.'"?>';
+
+        }else{*/
             $fileName = trim($data[1],"\'||\"");
-            $this->display($fileName,false);
-        }
+            $viewPath = rtrim($this->viewDir,'/').'/'.$fileName;
+            $html=$this->compile($viewPath,$data[0]);
+            $this->include[$data[0]] = $html;
+//        }
     }
 }
