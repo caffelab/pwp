@@ -9,7 +9,7 @@ class Controller
     public $tpl;
     public function __construct(){
         $this->tpl = new Tpl();
-        $this->tpl->cacheDir = ROOT_PATH.'cache/';
+        //$this->tpl->cacheDir = ROOT_PATH.'cache/';
     }
 
     public function assign($name,$value){
@@ -17,16 +17,8 @@ class Controller
     }
 
     public function display($pageName=''){
-        $tmpDir = $this->getViewPath();
-        $this->tpl->viewDir = $tmpDir;
-        //echo $tmpDir;
-        //echo __DIR__;
-        if(!empty($pageName)){
-            $page_name = $pageName;
-        }else{
-            $page_name = ACTION_NAME.'.html';
-        }
-        $this->tpl->display($page_name);
+        
+        $this->tpl->display($pageName);
     }
 
     //目录为：app\system\view\api\index.html
