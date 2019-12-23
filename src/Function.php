@@ -21,3 +21,24 @@ function is_debug(){
     $config = \pwp\Config::getConfig();
     return $config['debug'];
 }
+/**
+ * cache函数
+ * @param [string] $keyName
+ * @return void
+ */
+function cache($keyName='file'){
+    return new \pwp\lib\Cache($keyName);
+}
+
+/**
+ * session函数
+ * @param [string]
+ */
+function session($session='default'){
+    return new \pwp\lib\Session($session);
+}
+
+/**
+ * log函数
+ */
+
